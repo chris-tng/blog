@@ -1,0 +1,67 @@
+<h1 id="paper-summary-a-simple-framework-for-contrastive-learning-of-visual-representations">Paper Summary: A Simple Framework for Contrastive Learning of Visual Representations</h1>
+
+<h3 id="context">Context</h3>
+<p><code class="highlighter-rouge">Unsupervised learning</code> is a framework for learning a pattern in unlabeled data. Traditionally, when we think about unsupervised learning, we think about clustering like K-means, DBSCAN, etc. Until recent, with the advancements of Deep Learning, there has been a renaissance of unsupervised learning: from autoencoder to autoregressive networks, variational autoencoder and generative adversarial networks. Even now it is rebranded as <code class="highlighter-rouge">self-supervised learning</code>.</p>
+
+<blockquote>
+  <p>I Now call it “self-supervised learning”, because “unsupervised” is both a loaded and confusing term.
+In self-supervised learning, the system learns to predict part of its input from other parts of it input - Yann Lecun</p>
+</blockquote>
+
+<h3 id="self-supevised-learning">Self-supevised Learning</h3>
+
+<p>Self-supervised learning employs clever tricks so that the data could create its own supervision. It exploits the signal in a large amount of unlabeled data to learn rich representaions.</p>
+
+<p>The key ingredient of <code class="highlighter-rouge">self-supervised learning</code> is the pretext task or auxilary task. Generally these tasks usually have some forms of reconstruction of input. In NLP, we have seen it in</p>
+<ul>
+  <li><code class="highlighter-rouge">Word2vec</code>: learning to predict surrounding words given context words</li>
+  <li><code class="highlighter-rouge">BERT</code>: learning to predict masked words given context words</li>
+</ul>
+
+<p>In Computer Vision:</p>
+<ul>
+  <li><code class="highlighter-rouge">Context encoders</code>: predict the missing part of images <a href="https://arxiv.org/abs/1604.07379">Pathak et al 2016</a></li>
+</ul>
+
+<h3 id="simclr">SimCLR</h3>
+
+<p>SimCLR is the work of Google Brain that follows the line of research of applying contrastive framework into learning representation in Computer Vision (MoCo, PIRL).</p>
+
+<p>The general idea is to use data augmentation to create different versions of the same example then to apply consistency training to ensure these augmentation shares the same label. The <code class="highlighter-rouge">consistency training</code> assumption is that if our data augmentation is of high quality (class-preserving data augmentation) then the augmented versions should share the same underlying label. This assumption is common in recent work in semi-supervised learning which employs high-quality augmentations to regularize training (FixMatch, UDA).</p>
+
+<p><img src="images/simclr.png" alt="Architecture" /></p>
+
+<ol>
+  <li><code class="highlighter-rouge">Data Augmentation</code>: Apply high quality data augmentation to input x to produce a pair of augmented samples</li>
+  <li><code class="highlighter-rouge">Encoding</code>: Run the examples through an encoding function (ResNet-50) to have a <code class="highlighter-rouge">transformation-rich representation</code> $h$</li>
+  <li><code class="highlighter-rouge">Projection</code>: project to <code class="highlighter-rouge">transformation-invariant representation</code> $z$</li>
+  <li><code class="highlighter-rouge">Contrastive Learning</code>: Representations going through a similarity measure (cosine) then propagated to a loss. It is minimized so that similar pairs are pulled together while dissimilar pairs are pushed away.</li>
+</ol>
+
+<p>Once the model is trained on the contrastive learning task, it can be used for transfer learning. The representations from the encoder $h$ are used instead of representations obtained from the projection head.</p>
+
+<h3 id="result">Result</h3>
+
+<p><img src="images/simclr_result.png" alt="SimCLR result" /></p>
+
+<p>This is where it gets exciting</p>
+<blockquote>
+  <p>On ImageNet: A linear classifier trained on self-supervised representations matches Supervised ResNet50 (76.5% top-1, a 7% relative improvement over previous SOTA)</p>
+</blockquote>
+
+<p>Basically it says that self-supervised learning models could match performance of theirs supervised counterpart (Of course, by using larger models and more data). Since we have way more unlabeled data than labeled data, self-supervised learning could potentially surpass supervised learning.</p>
+
+<p>Key ideas:</p>
+
+<ol>
+  <li>
+    <p>Composition of data augmentation is critical for learning good representations</p>
+  </li>
+  <li>
+    <p>Projection head separated from the encoding function: it enables the model to learn transformation-rich representation.
+This nonlinear transformation boosts accuracy by at least 10%.</p>
+  </li>
+  <li>
+    <p>Contrastive learning framework employs <code class="highlighter-rouge">normalized temperature-scaled cross entropy loss</code>. This loss has similar structure to <code class="highlighter-rouge">npair loss</code> which shows to be a powerful loss in contrastive learning. Experiment indicates that it boosts performance by +10% accuracy compared to simple margin loss.</p>
+  </li>
+</ol>

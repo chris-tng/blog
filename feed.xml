@@ -1,4 +1,70 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://chris-tng.github.io/blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chris-tng.github.io/blog/" rel="alternate" type="text/html" /><updated>2020-03-21T13:30:56-05:00</updated><id>https://chris-tng.github.io/blog/feed.xml</id><title type="html">fastpages</title><subtitle>An easy to use blogging platform with support for Jupyter Notebooks.</subtitle><entry><title type="html">Fastpages Notebook Blog Post</title><link href="https://chris-tng.github.io/blog/jupyter/2020/02/20/test.html" rel="alternate" type="text/html" title="Fastpages Notebook Blog Post" /><published>2020-02-20T00:00:00-06:00</published><updated>2020-02-20T00:00:00-06:00</updated><id>https://chris-tng.github.io/blog/jupyter/2020/02/20/test</id><content type="html" xml:base="https://chris-tng.github.io/blog/jupyter/2020/02/20/test.html">&lt;!--
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="https://chris-tng.github.io/blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chris-tng.github.io/blog/" rel="alternate" type="text/html" /><updated>2020-04-07T17:53:03-05:00</updated><id>https://chris-tng.github.io/blog/feed.xml</id><title type="html">fastpages</title><subtitle>An easy to use blogging platform with support for Jupyter Notebooks.</subtitle><entry><title type="html">Paper Summary Simclr</title><link href="https://chris-tng.github.io/blog/2020/04/06/paper-summary-simclr.html" rel="alternate" type="text/html" title="Paper Summary Simclr" /><published>2020-04-06T00:00:00-05:00</published><updated>2020-04-06T00:00:00-05:00</updated><id>https://chris-tng.github.io/blog/2020/04/06/paper-summary-simclr</id><content type="html" xml:base="https://chris-tng.github.io/blog/2020/04/06/paper-summary-simclr.html">&lt;h1 id=&quot;paper-summary-a-simple-framework-for-contrastive-learning-of-visual-representations&quot;&gt;Paper Summary: A Simple Framework for Contrastive Learning of Visual Representations&lt;/h1&gt;
+
+&lt;h3 id=&quot;context&quot;&gt;Context&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Unsupervised learning&lt;/code&gt; is a framework for learning a pattern in unlabeled data. Traditionally, when we think about unsupervised learning, we think about clustering like K-means, DBSCAN, etc. Until recent, with the advancements of Deep Learning, there has been a renaissance of unsupervised learning: from autoencoder to autoregressive networks, variational autoencoder and generative adversarial networks. Even now it is rebranded as &lt;code class=&quot;highlighter-rouge&quot;&gt;self-supervised learning&lt;/code&gt;.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;I Now call it “self-supervised learning”, because “unsupervised” is both a loaded and confusing term.
+In self-supervised learning, the system learns to predict part of its input from other parts of it input - Yann Lecun&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;self-supevised-learning&quot;&gt;Self-supevised Learning&lt;/h3&gt;
+
+&lt;p&gt;Self-supervised learning employs clever tricks so that the data could create its own supervision. It exploits the signal in a large amount of unlabeled data to learn rich representaions.&lt;/p&gt;
+
+&lt;p&gt;The key ingredient of &lt;code class=&quot;highlighter-rouge&quot;&gt;self-supervised learning&lt;/code&gt; is the pretext task or auxilary task. Generally these tasks usually have some forms of reconstruction of input. In NLP, we have seen it in&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Word2vec&lt;/code&gt;: learning to predict surrounding words given context words&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;BERT&lt;/code&gt;: learning to predict masked words given context words&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In Computer Vision:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Context encoders&lt;/code&gt;: predict the missing part of images &lt;a href=&quot;https://arxiv.org/abs/1604.07379&quot;&gt;Pathak et al 2016&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;simclr&quot;&gt;SimCLR&lt;/h3&gt;
+
+&lt;p&gt;SimCLR is the work of Google Brain that follows the line of research of applying contrastive framework into learning representation in Computer Vision (MoCo, PIRL).&lt;/p&gt;
+
+&lt;p&gt;The general idea is to use data augmentation to create different versions of the same example then to apply consistency training to ensure these augmentation shares the same label. The &lt;code class=&quot;highlighter-rouge&quot;&gt;consistency training&lt;/code&gt; assumption is that if our data augmentation is of high quality (class-preserving data augmentation) then the augmented versions should share the same underlying label. This assumption is common in recent work in semi-supervised learning which employs high-quality augmentations to regularize training (FixMatch, UDA).&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;images/simclr.png&quot; alt=&quot;Architecture&quot; /&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Data Augmentation&lt;/code&gt;: Apply high quality data augmentation to input x to produce a pair of augmented samples&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Encoding&lt;/code&gt;: Run the examples through an encoding function (ResNet-50) to have a &lt;code class=&quot;highlighter-rouge&quot;&gt;transformation-rich representation&lt;/code&gt; $h$&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Projection&lt;/code&gt;: project to &lt;code class=&quot;highlighter-rouge&quot;&gt;transformation-invariant representation&lt;/code&gt; $z$&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Contrastive Learning&lt;/code&gt;: Representations going through a similarity measure (cosine) then propagated to a loss. It is minimized so that similar pairs are pulled together while dissimilar pairs are pushed away.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Once the model is trained on the contrastive learning task, it can be used for transfer learning. The representations from the encoder $h$ are used instead of representations obtained from the projection head.&lt;/p&gt;
+
+&lt;h3 id=&quot;result&quot;&gt;Result&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;images/simclr_result.png&quot; alt=&quot;SimCLR result&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This is where it gets exciting&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;On ImageNet: A linear classifier trained on self-supervised representations matches Supervised ResNet50 (76.5% top-1, a 7% relative improvement over previous SOTA)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Basically it says that self-supervised learning models could match performance of theirs supervised counterpart (Of course, by using larger models and more data). Since we have way more unlabeled data than labeled data, self-supervised learning could potentially surpass supervised learning.&lt;/p&gt;
+
+&lt;p&gt;Key ideas:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Composition of data augmentation is critical for learning good representations&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Projection head separated from the encoding function: it enables the model to learn transformation-rich representation.
+This nonlinear transformation boosts accuracy by at least 10%.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Contrastive learning framework employs &lt;code class=&quot;highlighter-rouge&quot;&gt;normalized temperature-scaled cross entropy loss&lt;/code&gt;. This loss has similar structure to &lt;code class=&quot;highlighter-rouge&quot;&gt;npair loss&lt;/code&gt; which shows to be a powerful loss in contrastive learning. Experiment indicates that it boosts performance by +10% accuracy compared to simple margin loss.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;</content><author><name></name></author><summary type="html">Paper Summary: A Simple Framework for Contrastive Learning of Visual Representations</summary></entry><entry><title type="html">Fastpages Notebook Blog Post</title><link href="https://chris-tng.github.io/blog/jupyter/2020/02/20/test.html" rel="alternate" type="text/html" title="Fastpages Notebook Blog Post" /><published>2020-02-20T00:00:00-06:00</published><updated>2020-02-20T00:00:00-06:00</updated><id>https://chris-tng.github.io/blog/jupyter/2020/02/20/test</id><content type="html" xml:base="https://chris-tng.github.io/blog/jupyter/2020/02/20/test.html">&lt;!--
 #################################################
 ### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
 #################################################
@@ -29,7 +95,7 @@
 &lt;pre&gt;&lt;code&gt;# Title
 &amp;gt; Awesome summary
 
-- toc: true- branch: master- badges: true- comments: true
+- toc:true- branch: master- badges: true- comments: true
 - author: Hamel Husain &amp;amp; Jeremy Howard
 - categories: [fastpages, jupyter]&lt;/code&gt;&lt;/pre&gt;
 &lt;ul&gt;
