@@ -34,7 +34,7 @@ SimCLR is the work of Google Brain that follows the line of research of applying
 
 The general idea is to use data augmentation to create different versions of the same example then to apply consistency training to ensure these augmentation shares the same label. The `consistency training` assumption is that if our data augmentation is of high quality (class-preserving data augmentation) then the augmented versions should share the same underlying labels. This assumption is common in recent work in semi-supervised learning which employs high-quality augmentations to regularize training (FixMatch, UDA). 
 
-![Architecture](../images/simclr.png)
+![Architecture]({{site.baseurl}}/images/simclr.png)
 
 1. `Data Augmentation`: Apply high quality data augmentation to input x to produce a pair of augmented samples
 2. `Encoding`: Run the examples through an encoding function (ResNet-50) to have a `transformation-rich representation` h
@@ -45,7 +45,7 @@ Once the model is trained on the contrastive learning task, it can be used for t
 
 ### Result
 
-![SimCLR result](../images/simclr_result.png)
+![SimCLR result]({{site.baseurl}}/images/simclr_result.png)
 
 This is where it gets exciting
 > On ImageNet: A linear classifier trained on self-supervised representations matches Supervised ResNet50 (76.5% top-1, a 7% relative improvement over previous SOTA)
