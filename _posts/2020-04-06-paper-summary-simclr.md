@@ -51,7 +51,7 @@ This is where it gets exciting
 
 Basically it says that self-supervised learning models could match performance of their supervised counterparts (Of course, by using larger models and more data). Since we have way more unlabeled data than labeled ones, self-supervised learning could potentially surpass supervised learning in the near future.
 
-Key ideas:
+**Key ideas**:
 
 1. Composition of data augmentation is critical for learning good representations
 
@@ -59,3 +59,5 @@ Key ideas:
 This nonlinear transformation boosts accuracy by at least 10%.
 
 3. Contrastive learning framework employs `normalized temperature-scaled cross entropy loss`. This loss has similar structure to `npair loss` which has been shown to be a powerful loss in contrastive learning. In the paper, experiments indicate that it boosts performance by +10% accuracy compared to simple margin loss.
+
+Overall, SimCLR is a good paper. In addition to a strong empirical result, it's interesting to see ideas from different subfields of ML incorporated in this paper, from self-supervised to contrastive learning and semi-supervised learning.
