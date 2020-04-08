@@ -9,8 +9,6 @@ search_exclude: false
 categories: [self-supervised]
 ---
 
-# Paper Summary: A Simple Framework for Contrastive Learning of Visual Representations
-
 ### Context
 `Unsupervised learning` is a framework for learning a pattern in unlabeled data. Traditionally, when we think about unsupervised learning, we think about clustering like K-means, DBSCAN, etc. Until recently, with the advancements of Deep Learning, there has been a renaissance of unsupervised learning: from autoencoder to autoregressive networks, variational autoencoder and generative adversarial networks. Even now it is rebranded as `self-supervised learning`.
 
