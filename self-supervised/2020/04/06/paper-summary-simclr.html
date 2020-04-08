@@ -29,7 +29,7 @@ In self-supervised learning, the system learns to predict part of its input from
 
 <p>The general idea is to use data augmentation to create different versions of the same example then to apply consistency training to ensure these augmentation shares the same label. The <code class="highlighter-rouge">consistency training</code> assumption is that if our data augmentation is of high quality (class-preserving data augmentation) then the augmented versions should share the same underlying label. This assumption is common in recent work in semi-supervised learning which employs high-quality augmentations to regularize training (FixMatch, UDA).</p>
 
-<p><img src="images/simclr.png" alt="Architecture" /></p>
+<p><img src="simclr.png" alt="Architecture" /></p>
 
 <ol>
   <li><code class="highlighter-rouge">Data Augmentation</code>: Apply high quality data augmentation to input x to produce a pair of augmented samples</li>
@@ -42,7 +42,7 @@ In self-supervised learning, the system learns to predict part of its input from
 
 <h3 id="result">Result</h3>
 
-<p><img src="images/simclr_result.png" alt="SimCLR result" /></p>
+<p><img src="simclr_result.png" alt="SimCLR result" /></p>
 
 <p>This is where it gets exciting</p>
 <blockquote>
