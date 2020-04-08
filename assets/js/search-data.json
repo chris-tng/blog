@@ -18,7 +18,7 @@
   
       ,"page1": {
           "title": "About Me",
-          "content": "This is where you put the contents of your About page. Like all your pages, it’s in Markdown format. . This website is powered by fastpages 1. . a blogging platform that natively supports Jupyter notebooks in addition to other formats. &#8617; . |",
+          "content": "I’m a ML engineer/ Data scientist in Vancouver, Canada. My current interest is the application of Deep Learning to NLP. I used to play with Probabilistic models (VAE, Ladder VAE, etc). I love beautiful code and beautifully engineered systems. .",
           "url": "https://chris-tng.github.io/blog/about/",
           "relUrl": "/about/",
           "date": ""
