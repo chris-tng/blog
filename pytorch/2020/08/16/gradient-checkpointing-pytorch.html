@@ -7,30 +7,30 @@
 <meta name="generator" content="Jekyll v4.0.0" />
 <meta property="og:title" content="First Look at Gradient Checkpointing in Pytorch" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="If you are one of those like me, who couldn’t afford to rent a super duper 8-GPU Titan RTX or don’t have access to such compute, but still want to experiment with latest NLP models. You might be interested in gradient checkpoint. In this post, I’ll explore gradient checkpointing in Pytorch." />
-<meta property="og:description" content="If you are one of those like me, who couldn’t afford to rent a super duper 8-GPU Titan RTX or don’t have access to such compute, but still want to experiment with latest NLP models. You might be interested in gradient checkpoint. In this post, I’ll explore gradient checkpointing in Pytorch." />
+<meta name="description" content="If you are one of those like me, a DL practitioner who couldn’t afford to rent a super duper 8-GPU Titan RTX or don’t have access to such compute. You might be interested in gradient checkpoint, a simple technique to trade computation for memory. In this post, I’ll explore gradient checkpointing in Pytorch." />
+<meta property="og:description" content="If you are one of those like me, a DL practitioner who couldn’t afford to rent a super duper 8-GPU Titan RTX or don’t have access to such compute. You might be interested in gradient checkpoint, a simple technique to trade computation for memory. In this post, I’ll explore gradient checkpointing in Pytorch." />
 <link rel="canonical" href="https://chris-tng.github.io/blog/pytorch/2020/08/16/gradient-checkpointing-pytorch.html" />
 <meta property="og:url" content="https://chris-tng.github.io/blog/pytorch/2020/08/16/gradient-checkpointing-pytorch.html" />
 <meta property="og:site_name" content="Chris Nguyen’s ML blog" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-08-16T00:00:00-05:00" />
 <script type="application/ld+json">
-{"datePublished":"2020-08-16T00:00:00-05:00","headline":"First Look at Gradient Checkpointing in Pytorch","description":"If you are one of those like me, who couldn’t afford to rent a super duper 8-GPU Titan RTX or don’t have access to such compute, but still want to experiment with latest NLP models. You might be interested in gradient checkpoint. In this post, I’ll explore gradient checkpointing in Pytorch.","mainEntityOfPage":{"@type":"WebPage","@id":"https://chris-tng.github.io/blog/pytorch/2020/08/16/gradient-checkpointing-pytorch.html"},"@type":"BlogPosting","url":"https://chris-tng.github.io/blog/pytorch/2020/08/16/gradient-checkpointing-pytorch.html","dateModified":"2020-08-16T00:00:00-05:00","@context":"https://schema.org"}</script>
+{"datePublished":"2020-08-16T00:00:00-05:00","headline":"First Look at Gradient Checkpointing in Pytorch","description":"If you are one of those like me, a DL practitioner who couldn’t afford to rent a super duper 8-GPU Titan RTX or don’t have access to such compute. You might be interested in gradient checkpoint, a simple technique to trade computation for memory. In this post, I’ll explore gradient checkpointing in Pytorch.","mainEntityOfPage":{"@type":"WebPage","@id":"https://chris-tng.github.io/blog/pytorch/2020/08/16/gradient-checkpointing-pytorch.html"},"@type":"BlogPosting","url":"https://chris-tng.github.io/blog/pytorch/2020/08/16/gradient-checkpointing-pytorch.html","dateModified":"2020-08-16T00:00:00-05:00","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://chris-tng.github.io/blog/feed.xml" title="Chris Nguyen's ML blog" /><link rel="shortcut icon" type="image/x-icon" href="/blog/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
 <title>First Look at Gradient Checkpointing in Pytorch | Chris Nguyen’s ML blog</title>
 <meta name="generator" content="Jekyll v4.0.0" />
 <meta property="og:title" content="First Look at Gradient Checkpointing in Pytorch" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="If you are one of those like me, who couldn’t afford to rent a super duper 8-GPU Titan RTX or don’t have access to such compute, but still want to experiment with latest NLP models. You might be interested in gradient checkpoint. In this post, I’ll explore gradient checkpointing in Pytorch." />
-<meta property="og:description" content="If you are one of those like me, who couldn’t afford to rent a super duper 8-GPU Titan RTX or don’t have access to such compute, but still want to experiment with latest NLP models. You might be interested in gradient checkpoint. In this post, I’ll explore gradient checkpointing in Pytorch." />
+<meta name="description" content="If you are one of those like me, a DL practitioner who couldn’t afford to rent a super duper 8-GPU Titan RTX or don’t have access to such compute. You might be interested in gradient checkpoint, a simple technique to trade computation for memory. In this post, I’ll explore gradient checkpointing in Pytorch." />
+<meta property="og:description" content="If you are one of those like me, a DL practitioner who couldn’t afford to rent a super duper 8-GPU Titan RTX or don’t have access to such compute. You might be interested in gradient checkpoint, a simple technique to trade computation for memory. In this post, I’ll explore gradient checkpointing in Pytorch." />
 <link rel="canonical" href="https://chris-tng.github.io/blog/pytorch/2020/08/16/gradient-checkpointing-pytorch.html" />
 <meta property="og:url" content="https://chris-tng.github.io/blog/pytorch/2020/08/16/gradient-checkpointing-pytorch.html" />
 <meta property="og:site_name" content="Chris Nguyen’s ML blog" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-08-16T00:00:00-05:00" />
 <script type="application/ld+json">
-{"datePublished":"2020-08-16T00:00:00-05:00","headline":"First Look at Gradient Checkpointing in Pytorch","description":"If you are one of those like me, who couldn’t afford to rent a super duper 8-GPU Titan RTX or don’t have access to such compute, but still want to experiment with latest NLP models. You might be interested in gradient checkpoint. In this post, I’ll explore gradient checkpointing in Pytorch.","mainEntityOfPage":{"@type":"WebPage","@id":"https://chris-tng.github.io/blog/pytorch/2020/08/16/gradient-checkpointing-pytorch.html"},"@type":"BlogPosting","url":"https://chris-tng.github.io/blog/pytorch/2020/08/16/gradient-checkpointing-pytorch.html","dateModified":"2020-08-16T00:00:00-05:00","@context":"https://schema.org"}</script>
+{"datePublished":"2020-08-16T00:00:00-05:00","headline":"First Look at Gradient Checkpointing in Pytorch","description":"If you are one of those like me, a DL practitioner who couldn’t afford to rent a super duper 8-GPU Titan RTX or don’t have access to such compute. You might be interested in gradient checkpoint, a simple technique to trade computation for memory. In this post, I’ll explore gradient checkpointing in Pytorch.","mainEntityOfPage":{"@type":"WebPage","@id":"https://chris-tng.github.io/blog/pytorch/2020/08/16/gradient-checkpointing-pytorch.html"},"@type":"BlogPosting","url":"https://chris-tng.github.io/blog/pytorch/2020/08/16/gradient-checkpointing-pytorch.html","dateModified":"2020-08-16T00:00:00-05:00","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 <link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
@@ -128,9 +128,9 @@ window.onload = wrap_img;
 <li class="toc-entry toc-h3"><a href="#backward-pass">Backward pass</a></li>
 <li class="toc-entry toc-h3"><a href="#putting-it-together">Putting it together</a></li>
 <li class="toc-entry toc-h3"><a href="#references">References</a></li>
-</ul><p>If you are one of those like me, who couldn’t afford to rent a super duper 8-GPU Titan RTX or don’t have access to such compute, but still want to experiment with latest NLP models. You might be interested in <code class="highlighter-rouge">gradient checkpoint</code>. In this post, I’ll explore gradient checkpointing in Pytorch.</p>
+</ul><p>If you are one of those like me, a DL practitioner who couldn’t afford to rent a super duper 8-GPU Titan RTX or don’t have access to such compute. You might be interested in <code class="highlighter-rouge">gradient checkpoint</code>, a simple technique to trade computation for memory. In this post, I’ll explore gradient checkpointing in Pytorch.</p>
 
-<p>In brief, <code class="highlighter-rouge">gradient checkpointing</code> is a trick to save memory by recomputing the intermediate activations during backward. Think of it like “lazy” backward. Layer activations are not saved for backpropagation but recomputed when necessary.</p>
+<p>In brief, <code class="highlighter-rouge">gradient checkpointing</code> is a trick to save memory by recomputing the intermediate activations during backward. Think of it like “lazy” backward. Layer activations are not saved for backpropagation but recomputed when necessary. To use it in pytorch:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">torch.utils.checkpoint</span> <span class="k">as</span> <span class="n">cp</span>
 
@@ -146,7 +146,7 @@ window.onload = wrap_img;
 <h3 id="forward-pass">
 <a class="anchor" href="#forward-pass" aria-hidden="true"><span class="octicon octicon-link"></span></a>Forward pass</h3>
 
-<p>Imagine the following forward pass where input x goes through layers one by one, resulting in intermediate activations h1, h2. Normally, h1 and h2 are tracked by Autograd engine for backpropagation.</p>
+<p>Imagine the following forward pass: input x goes through layers one by one, results are intermediate activations h1, h2. Normally, h1 and h2 are tracked by Autograd engine for backpropagation.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">---&gt;</span> <span class="p">[</span> <span class="n">layer1</span> <span class="p">]</span> <span class="o">---&gt;</span> <span class="p">[</span> <span class="n">layer2</span> <span class="p">]</span> <span class="o">---&gt;</span> 
                    <span class="n">h1</span>              <span class="n">h2</span>  
@@ -156,7 +156,7 @@ window.onload = wrap_img;
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
     <span class="n">h2</span> <span class="o">=</span> <span class="n">layer2</span><span class="p">(</span><span class="n">layer1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
-	<span class="k">return</span> <span class="n">h2</span>
+    <span class="k">return</span> <span class="n">h2</span>
 </code></pre></div></div>
 
 <p>Encapsulating this into a gradient checkpointing block which produces the output but doesn’t save any intermediate states</p>
@@ -179,7 +179,7 @@ window.onload = wrap_img;
 
 <p>During the backward pass, the gradient checkpointing block needs to return <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi>d</mi><mi>L</mi></mrow><mrow><mi>d</mi><mi>x</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{dL}{dx}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.2251079999999999em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8801079999999999em;"><span style="top:-2.6550000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">d</span><span class="mord mathdefault mtight">x</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">d</span><span class="mord mathdefault mtight">L</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span>.</p>
 
-<p>Since it’s detached from the computation graph, it needs to recompute intermediate states to produce gradient for input x. The trick is to redo the forward pass with grad-enabled then compute the gradient of activations with respect to input x</p>
+<p>Since it’s detached from the computation graph, it needs to recompute intermediate states to produce gradient for input x. The trick is to redo the forward pass with grad-enabled and compute the gradient of activations with respect to input x.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">detach_x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
 <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">enable_grad</span><span class="p">():</span>
@@ -230,7 +230,9 @@ window.onload = wrap_img;
         <span class="k">return</span> <span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="p">)</span> <span class="o">+</span> <span class="n">grads</span>
 </code></pre></div></div>
 
-<p>Let’s see how much memory it can save us. We’ll create a 40 layers neural networks with hidden state of 1024 neurons</p>
+<p>Let’s see how much memory it saves.</p>
+
+<p>We’ll create a 40 layers neural networks with hidden state of 1024 neurons</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">clones</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">module</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)])</span>
@@ -272,14 +274,16 @@ window.onload = wrap_img;
 <span class="n">y</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>Result is encouraging: memory consumption with grad ckpt: <code class="highlighter-rouge">166.5352 (MB)</code> vs without <code class="highlighter-rouge">244.5352 (MB)</code>.</p>
+<p>Result is encouraging: memory consumption with grad ckpt: <code class="highlighter-rouge">166.5352 (MB)</code> vs without <code class="highlighter-rouge">244.5352 (MB)</code>. This is 30% saving in memory.</p>
 
-<p>Congratulations! You just learn something really cool for your toolbox.</p>
+<p>That’s it. Congratulations! You just learn something really cool for your toolbox.</p>
 
 <h3 id="references">
 <a class="anchor" href="#references" aria-hidden="true"><span class="octicon octicon-link"></span></a>References</h3>
 
-<p>https://github.com/pytorch/pytorch/blob/master/torch/utils/checkpoint.py</p>
+<ul>
+  <li><a href="https://github.com/pytorch/pytorch/blob/master/torch/utils/checkpoint.py">Pytorch code for gradient ckpt</a></li>
+</ul>
 
   </div><!-- from https://github.com/utterance/utterances -->
 <script src="https://utteranc.es/client.js"
