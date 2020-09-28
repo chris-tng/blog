@@ -10,9 +10,9 @@ categories: [pytorch]
 
 ---
 
-If you are one of those like me, who couldn't afford to rent a super duper 8-GPU Titan RTX or don't have access to such compute, but still want to experiment with latest NLP models. You might be interested in `gradient checkpoint`. In this post, I'll explore gradient checkpointing in Pytorch.
+If you are one of those like me, a DL practitioner who couldn't afford to rent a super duper 8-GPU Titan RTX or don't have access to such compute. You might be interested in `gradient checkpoint`, a simple technique to trade computation for memory. In this post, I'll explore gradient checkpointing in Pytorch.
 
-In brief, `gradient checkpointing` is a trick to save memory by recomputing the intermediate activations during backward. Think of it like "lazy" backward. Layer activations are not saved for backpropagation but recomputed when necessary.
+In brief, `gradient checkpointing` is a trick to save memory by recomputing the intermediate activations during backward. Think of it like "lazy" backward. Layer activations are not saved for backpropagation but recomputed when necessary. To use it in pytorch:
 
 ```python
 import torch.utils.checkpoint as cp
@@ -28,7 +28,7 @@ That looks surprisingly simple. Wondering what magic lies underneath? Let's dive
 
 ### Forward pass
 
-Imagine the following forward pass where input x goes through layers one by one, resulting in intermediate activations h1, h2. Normally, h1 and h2 are tracked by Autograd engine for backpropagation. 
+Imagine the following forward pass: input x goes through layers one by one, results are intermediate activations h1, h2. Normally, h1 and h2 are tracked by Autograd engine for backpropagation. 
 
 ```python
 x ---> [ layer1 ] ---> [ layer2 ] ---> 
@@ -40,7 +40,7 @@ The trick is to detach it from the `computation graph` so they do not consume me
 ```python
 with torch.no_grad():
     h2 = layer2(layer1(x))
-	return h2
+    return h2
 ```
 
 Encapsulating this into a gradient checkpointing block which produces the output but doesn't save any intermediate states
@@ -64,7 +64,7 @@ x <--- [     gradient ckpt      ] <---
 
 During the backward pass, the gradient checkpointing block needs to return $$ \frac{dL}{dx} $$.
 
-Since it's detached from the computation graph, it needs to recompute intermediate states to produce gradient for input x. The trick is to redo the forward pass with grad-enabled then compute the gradient of activations with respect to input x
+Since it's detached from the computation graph, it needs to recompute intermediate states to produce gradient for input x. The trick is to redo the forward pass with grad-enabled and compute the gradient of activations with respect to input x.
 
 ```python
 detach_x = x.detach()
@@ -116,7 +116,9 @@ class CkptFunc(torch.autograd.Function):
         return (None, ) + grads
 ```
 
-Let's see how much memory it can save us. We'll create a 40 layers neural networks with hidden state of 1024 neurons
+Let's see how much memory it saves. 
+
+We'll create a 40 layers neural networks with hidden state of 1024 neurons
 
 ```python
 def clones(module, N):
@@ -159,10 +161,10 @@ x = torch.randn(512, 64)
 y = model(x)
 ```
 
-Result is encouraging: memory consumption with grad ckpt: `166.5352 (MB)` vs without `244.5352 (MB)`. 
+Result is encouraging: memory consumption with grad ckpt: `166.5352 (MB)` vs without `244.5352 (MB)`. This is 30% saving in memory.
 
-Congratulations! You just learn something really cool for your toolbox.
+That's it. Congratulations! You just learn something really cool for your toolbox.
 
 ### References
 
-https://github.com/pytorch/pytorch/blob/master/torch/utils/checkpoint.py
+- [Pytorch code for gradient ckpt](https://github.com/pytorch/pytorch/blob/master/torch/utils/checkpoint.py)
