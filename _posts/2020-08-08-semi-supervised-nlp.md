@@ -5,7 +5,7 @@ summary: "Exploration of recent advancements in Semi-supervised Learning for NLP
 layout: post
 toc: true
 comments: true
-hide: false
+hide: true
 search_exclude: false
 categories: [semi-supervised,consistency-training,nlp]
 ---
