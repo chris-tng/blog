@@ -91,12 +91,10 @@ On a `V100 GPU`, with `seq_len = 4000`, `d_model = 1024` I see a speedup around 
 
 In terms of memory, the difference is significant, when `d_model` is small compared to `seq_len`. I use `d_model = 64` so the whole ting can fit into 16GB of GPU memory
 
-```markdown
 | Seq Len | Kernelized | Scaled-dot |
-| ------- | ---------- | -----------|
+|-|-|-|
 | 4096    |    12 MB   |   132 MB   |
 | 4096*6  |    72 MB   |   4096 MB  |
-```
 
 
 
