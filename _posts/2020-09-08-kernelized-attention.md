@@ -21,9 +21,9 @@ A short revisit to `self-attention`: given 3 matrices Q, K, V corresponding to q
 
 $$ V' = softmax (\frac{QK^T}{\sqrt{d}}) V $$
 
-Assume Q of shape $(N, d)$, K and V are both of shape $(N, d)$, where N is the sequence length. The attention becomes a computation and memory bottleneck: Q K^T are of shape $(N, N) $ 
+Assume $Q$ of shape $(N, d)$, $K$ and $V$ are both of shape $(N, d)$, where $N$ is the sequence length, $d$ is model size. The attention computation becomes a bottleneck since $QK^T$ is of shape $(N, N)$.
 
-Denote $v'_i$ is the i-th row of $V'$. Decomposing the above formula, we see that it's computed as a normalized linear combination of rows of $V$ :
+Denote $v'_i$ is the i-th row of $V'$. Decomposing the above formula, we see that it's computed as a linear combination of rows of $V$ :
 
 $$ v'_i = \frac{\sum_j \alpha_j v_j}{\sum_j \alpha_j} $$
 
@@ -45,7 +45,7 @@ In short
 
 $$ v'_j = \frac{\phi(q_i)^T (\sum_j \phi(k_j)^T v_j )}{ \phi(q_i)^T \sum_j \phi(k_j)^T} $$
 
-Basically the trick is that by kernelizing, we could compute the $KV$ product first, which results in a $(d, d)$ matrix, much cheaper than the $QK^T$ product of shape $(N, N)$. In many practical cases, we want our transformer to process long sequences, so $N >> d$  hence the saveup.
+Basically the trick is that by kernelizing, we could compute the $KV$ product first, which results in a $(d, d)$ matrix, much cheaper than the $QK^T$ product of shape $(N, N)$. In many practical cases, we want our transformer to process long sequences, so $N$ >> $d$  hence the saveup.
 
 In terms of computation, the scaled-dot product attention would require $\mathcal{O}(d N^2)$ operations while the kernelized attention requires $$ \mathcal{O}(Nd^2) $$ operations. Assume we have sequences of length 4000 with model of size 1000. Standard attention would need $16e+9$ operations, kernelized one needs $4e+9$ operations, so theoretically 4 times speedup.
 
@@ -89,13 +89,13 @@ def kernel_attn(q, k, v, phi):
 
 On a `V100 GPU`, with `seq_len = 4000`, `d_model = 1024` I see a speedup around 2.5 times (2.24ms vs 5.57ms), which is not bad.
 
-In terms of memory, the difference is significant, when `d_model` is small compared to `seq_len`. Here `d_model = 64` (so it can fit into 16GB of GPU memory)
+In terms of memory, the difference is significant, when `d_model` is small compared to `seq_len`. I use `d_model = 64` so the whole ting can fit into 16GB of GPU memory
 
 ```markdown
-| Seq Len | Kernelized | Scaled-dot product |
-| --- | --- |
-| 4096    |  12 MB | 132 MB |
-| 4096*6 | 72 MB | 4096 MB |
+| Seq Len | Kernelized | Scaled-dot |
+| ------- | ---------- | -----------|
+| 4096    |    12 MB   |   132 MB   |
+| 4096*6  |    72 MB   |   4096 MB  |
 ```
 
 
