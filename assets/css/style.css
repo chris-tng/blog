@@ -339,7 +339,7 @@ table td { border: 1px solid #e8e8e8; }
 
 .page-content { -webkit-font-smoothing: antialiased !important; text-rendering: optimizeLegibility !important; font-family: "Segoe UI", SegoeUI, Roboto, "Segoe WP", "Helvetica Neue", "Helvetica", "Tahoma", "Arial", sans-serif !important; }
 
-.post-content p, .post-content li { font-size: 20px; color: #515151; }
+.post-content p, .post-content li { font-size: 18px; color: #515151; }
 
 .post-link { font-weight: normal; }
 
@@ -407,7 +407,7 @@ h1:hover .anchor-link, h2:hover .anchor-link, h3:hover .anchor-link, h4:hover .a
 
 .search-result-highlight { color: #2e0137; font-weight: bold; }
 
-table { display: block !important; overflow-x: auto; white-space: nowrap; font-size: 75%; border: none; }
+table { display: block !important; overflow-x: auto; white-space: nowrap; font-size: 100%; border: none; }
 
 table th { text-align: center !important; }
 
