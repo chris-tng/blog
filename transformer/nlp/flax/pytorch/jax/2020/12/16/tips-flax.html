@@ -7,30 +7,30 @@
 <meta name="generator" content="Jekyll v4.0.0" />
 <meta property="og:title" content="Tips on converting pytorch models to flax" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="You probably hear about jax. As all the cool kids in town use it, I decided to give it a try a while ago. But not until recently, during an experiment with TPU in Pytorch, I ran into a fatal error due to limited support of pytorch for XLA. With my limited knowledge of jax/flax, I decided to port huggingface’s ELECTRA model to flax. This results in my first :hugs: pull request. This blog contains a few tips for converting pytorch to flax model." />
-<meta property="og:description" content="You probably hear about jax. As all the cool kids in town use it, I decided to give it a try a while ago. But not until recently, during an experiment with TPU in Pytorch, I ran into a fatal error due to limited support of pytorch for XLA. With my limited knowledge of jax/flax, I decided to port huggingface’s ELECTRA model to flax. This results in my first :hugs: pull request. This blog contains a few tips for converting pytorch to flax model." />
+<meta name="description" content="You probably hear about jax. As all the cool kids in town use it, I decided to give it a try a while ago. But not until recently, during an experiment with TPU in Pytorch, I ran into a fatal error due to poor support of pytorch for XLA. With my limited knowledge of jax/flax, I decided to port huggingface’s ELECTRA model to flax. This results in my first huggingface pull request. This blog post contains a few tips, hopefully useful, for converting pytorch to flax model." />
+<meta property="og:description" content="You probably hear about jax. As all the cool kids in town use it, I decided to give it a try a while ago. But not until recently, during an experiment with TPU in Pytorch, I ran into a fatal error due to poor support of pytorch for XLA. With my limited knowledge of jax/flax, I decided to port huggingface’s ELECTRA model to flax. This results in my first huggingface pull request. This blog post contains a few tips, hopefully useful, for converting pytorch to flax model." />
 <link rel="canonical" href="https://chris-tng.github.io/blog/transformer/nlp/flax/pytorch/jax/2020/12/16/tips-flax.html" />
 <meta property="og:url" content="https://chris-tng.github.io/blog/transformer/nlp/flax/pytorch/jax/2020/12/16/tips-flax.html" />
 <meta property="og:site_name" content="Chris Nguyen’s notes" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-12-16T00:00:00-06:00" />
 <script type="application/ld+json">
-{"description":"You probably hear about jax. As all the cool kids in town use it, I decided to give it a try a while ago. But not until recently, during an experiment with TPU in Pytorch, I ran into a fatal error due to limited support of pytorch for XLA. With my limited knowledge of jax/flax, I decided to port huggingface’s ELECTRA model to flax. This results in my first :hugs: pull request. This blog contains a few tips for converting pytorch to flax model.","headline":"Tips on converting pytorch models to flax","dateModified":"2020-12-16T00:00:00-06:00","datePublished":"2020-12-16T00:00:00-06:00","@type":"BlogPosting","url":"https://chris-tng.github.io/blog/transformer/nlp/flax/pytorch/jax/2020/12/16/tips-flax.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://chris-tng.github.io/blog/transformer/nlp/flax/pytorch/jax/2020/12/16/tips-flax.html"},"@context":"https://schema.org"}</script>
+{"description":"You probably hear about jax. As all the cool kids in town use it, I decided to give it a try a while ago. But not until recently, during an experiment with TPU in Pytorch, I ran into a fatal error due to poor support of pytorch for XLA. With my limited knowledge of jax/flax, I decided to port huggingface’s ELECTRA model to flax. This results in my first huggingface pull request. This blog post contains a few tips, hopefully useful, for converting pytorch to flax model.","headline":"Tips on converting pytorch models to flax","dateModified":"2020-12-16T00:00:00-06:00","datePublished":"2020-12-16T00:00:00-06:00","@type":"BlogPosting","url":"https://chris-tng.github.io/blog/transformer/nlp/flax/pytorch/jax/2020/12/16/tips-flax.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://chris-tng.github.io/blog/transformer/nlp/flax/pytorch/jax/2020/12/16/tips-flax.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://chris-tng.github.io/blog/feed.xml" title="Chris Nguyen's notes" /><link rel="shortcut icon" type="image/x-icon" href="/blog/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
 <title>Tips on converting pytorch models to flax | Chris Nguyen’s notes</title>
 <meta name="generator" content="Jekyll v4.0.0" />
 <meta property="og:title" content="Tips on converting pytorch models to flax" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="You probably hear about jax. As all the cool kids in town use it, I decided to give it a try a while ago. But not until recently, during an experiment with TPU in Pytorch, I ran into a fatal error due to limited support of pytorch for XLA. With my limited knowledge of jax/flax, I decided to port huggingface’s ELECTRA model to flax. This results in my first :hugs: pull request. This blog contains a few tips for converting pytorch to flax model." />
-<meta property="og:description" content="You probably hear about jax. As all the cool kids in town use it, I decided to give it a try a while ago. But not until recently, during an experiment with TPU in Pytorch, I ran into a fatal error due to limited support of pytorch for XLA. With my limited knowledge of jax/flax, I decided to port huggingface’s ELECTRA model to flax. This results in my first :hugs: pull request. This blog contains a few tips for converting pytorch to flax model." />
+<meta name="description" content="You probably hear about jax. As all the cool kids in town use it, I decided to give it a try a while ago. But not until recently, during an experiment with TPU in Pytorch, I ran into a fatal error due to poor support of pytorch for XLA. With my limited knowledge of jax/flax, I decided to port huggingface’s ELECTRA model to flax. This results in my first huggingface pull request. This blog post contains a few tips, hopefully useful, for converting pytorch to flax model." />
+<meta property="og:description" content="You probably hear about jax. As all the cool kids in town use it, I decided to give it a try a while ago. But not until recently, during an experiment with TPU in Pytorch, I ran into a fatal error due to poor support of pytorch for XLA. With my limited knowledge of jax/flax, I decided to port huggingface’s ELECTRA model to flax. This results in my first huggingface pull request. This blog post contains a few tips, hopefully useful, for converting pytorch to flax model." />
 <link rel="canonical" href="https://chris-tng.github.io/blog/transformer/nlp/flax/pytorch/jax/2020/12/16/tips-flax.html" />
 <meta property="og:url" content="https://chris-tng.github.io/blog/transformer/nlp/flax/pytorch/jax/2020/12/16/tips-flax.html" />
 <meta property="og:site_name" content="Chris Nguyen’s notes" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-12-16T00:00:00-06:00" />
 <script type="application/ld+json">
-{"description":"You probably hear about jax. As all the cool kids in town use it, I decided to give it a try a while ago. But not until recently, during an experiment with TPU in Pytorch, I ran into a fatal error due to limited support of pytorch for XLA. With my limited knowledge of jax/flax, I decided to port huggingface’s ELECTRA model to flax. This results in my first :hugs: pull request. This blog contains a few tips for converting pytorch to flax model.","headline":"Tips on converting pytorch models to flax","dateModified":"2020-12-16T00:00:00-06:00","datePublished":"2020-12-16T00:00:00-06:00","@type":"BlogPosting","url":"https://chris-tng.github.io/blog/transformer/nlp/flax/pytorch/jax/2020/12/16/tips-flax.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://chris-tng.github.io/blog/transformer/nlp/flax/pytorch/jax/2020/12/16/tips-flax.html"},"@context":"https://schema.org"}</script>
+{"description":"You probably hear about jax. As all the cool kids in town use it, I decided to give it a try a while ago. But not until recently, during an experiment with TPU in Pytorch, I ran into a fatal error due to poor support of pytorch for XLA. With my limited knowledge of jax/flax, I decided to port huggingface’s ELECTRA model to flax. This results in my first huggingface pull request. This blog post contains a few tips, hopefully useful, for converting pytorch to flax model.","headline":"Tips on converting pytorch models to flax","dateModified":"2020-12-16T00:00:00-06:00","datePublished":"2020-12-16T00:00:00-06:00","@type":"BlogPosting","url":"https://chris-tng.github.io/blog/transformer/nlp/flax/pytorch/jax/2020/12/16/tips-flax.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://chris-tng.github.io/blog/transformer/nlp/flax/pytorch/jax/2020/12/16/tips-flax.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 <link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
@@ -140,15 +140,15 @@ window.onload = wrap_img;
 <li class="toc-entry toc-h2"><a href="#loading-pytorch-checkpoint">Loading pytorch checkpoint</a></li>
 <li class="toc-entry toc-h2"><a href="#converting-to-nested-dict">Converting to nested dict</a></li>
 <li class="toc-entry toc-h2"><a href="#divide-and-conquer-to-align-model-weights">Divide and Conquer to align model weights</a></li>
-<li class="toc-entry toc-h2"><a href="#prefer-setup-instead-of-nncompact">Prefer setup instead of nn.compact</a></li>
+<li class="toc-entry toc-h2"><a href="#prefer-setup-instead-of-nncompact">Prefer setup() instead of nn.compact</a></li>
 <li class="toc-entry toc-h2"><a href="#common-problems-to-keep-in-mind">Common problems to keep in mind</a></li>
 <li class="toc-entry toc-h2"><a href="#conclusion">Conclusion</a></li>
-</ul><p>You probably hear about <a href="https://github.com/google/jax">jax</a>. As all the cool kids in town use it, I decided to give it a try a while ago. But not until recently, during an experiment with TPU in Pytorch, I ran into a fatal error due to limited support of pytorch for XLA. With my limited knowledge of <code class="highlighter-rouge">jax/flax</code>, I decided to port huggingface’s <a href="https://ai.googleblog.com/2020/03/more-efficient-nlp-model-pre-training.html">ELECTRA</a> model to <a href="https://github.com/google/flax">flax</a>. This results in my first :hugs:  <a href="https://github.com/huggingface/transformers/pull/9172">pull request</a>. This blog contains a few tips for converting pytorch to flax model.</p>
+</ul><p>You probably hear about <a href="https://github.com/google/jax">jax</a>. As all the cool kids in town use it, I decided to give it a try a while ago. But not until recently, during an experiment with TPU in Pytorch, I ran into a fatal error due to poor support of pytorch for XLA. With my limited knowledge of <code class="highlighter-rouge">jax/flax</code>, I decided to port huggingface’s <a href="https://ai.googleblog.com/2020/03/more-efficient-nlp-model-pre-training.html">ELECTRA</a> model to <a href="https://github.com/google/flax">flax</a>. This results in my first <a href="https://huggingface.co/">huggingface</a> <a href="https://github.com/huggingface/transformers/pull/9172">pull request</a>. This blog post contains a few tips, hopefully useful, for converting pytorch to flax model.</p>
 
 <h2 id="why-flax">
 <a class="anchor" href="#why-flax" aria-hidden="true"><span class="octicon octicon-link"></span></a>Why flax</h2>
 
-<p>You may ask why I use <code class="highlighter-rouge">flax</code>. To be honest, I don’t know. I’m naive user just like many of you guys. Part of the reason is <code class="highlighter-rouge">flax</code> seems to be getting some traction nowadays. Especially, huggingface :hugs: starts to roll out some support for flax (with <a href="https://huggingface.co/transformers/model_doc/bert.html#flaxbertmodel">FlaxBertModel</a>).</p>
+<p>You may ask why I use <code class="highlighter-rouge">flax</code>. To be honest, I don’t know. I’m a naive user just like many of you guys. Part of the reason is <code class="highlighter-rouge">flax</code> seems to be getting some traction nowadays. Especially, huggingface starts to roll out some support for flax (with <a href="https://huggingface.co/transformers/model_doc/bert.html#flaxbertmodel">FlaxBertModel</a>).</p>
 
 <p>Personally, as a pytorch user (with a painful background in tensorflow), I find <code class="highlighter-rouge">flax</code> has a steep learning curve. I don’t really like the abstractions <code class="highlighter-rouge">flax</code> introduce, it feels like magic! However, among many competing frameworks in <code class="highlighter-rouge">jax</code> space (<a href="https://github.com/deepmind/dm-haiku">haiku</a>, <a href="https://github.com/google/trax">trax</a>, <a href="https://github.com/google/objax">objax</a>), I had to pick one, and that’s flax. I may deeply regret my choice in the future, who knows. But c’est la vie!</p>
 
@@ -157,7 +157,7 @@ window.onload = wrap_img;
 <h2 id="loading-pytorch-checkpoint">
 <a class="anchor" href="#loading-pytorch-checkpoint" aria-hidden="true"><span class="octicon octicon-link"></span></a>Loading pytorch checkpoint</h2>
 
-<p>After you download and cache model</p>
+<p>First step, you may want to download the model</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">generator</span> <span class="o">=</span> <span class="n">ElectraForMaskedLM</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
 </code></pre></div></div>
@@ -173,12 +173,12 @@ window.onload = wrap_img;
     <span class="n">pt_state</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">pt_state</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">pt_state</code> is a flat python dict, first few keys looks like</p>
+<p><code class="highlighter-rouge">pt_state</code> is a flat python dict, first few keys look like</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">'electra.embeddings.word_embeddings.weight'</span><span class="p">,</span> <span class="s">'electra.embeddings.position_embeddings.weight'</span><span class="p">,</span> <span class="s">'electra.embeddings.token_type_embeddings.weight'</span>
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">jax/flax</code> uses nested dict to manage model parameters so a conversion is needed</p>
+<p><code class="highlighter-rouge">jax/flax</code> uses nested dict to manage model parameters (referred as <a href="https://jax.readthedocs.io/en/latest/pytrees.html">pytrees</a>) so a conversion is needed</p>
 
 <h2 id="converting-to-nested-dict">
 <a class="anchor" href="#converting-to-nested-dict" aria-hidden="true"><span class="octicon octicon-link"></span></a>Converting to nested dict</h2>
@@ -197,9 +197,9 @@ window.onload = wrap_img;
 <h2 id="divide-and-conquer-to-align-model-weights">
 <a class="anchor" href="#divide-and-conquer-to-align-model-weights" aria-hidden="true"><span class="octicon octicon-link"></span></a>Divide and Conquer to align model weights</h2>
 
-<p>The whole effort lies in this part where I basically have to check every layer correctly loaded in <code class="highlighter-rouge">flax</code> and check the forward pass done correctly.</p>
+<p>The whole effort lies in this part where I basically have to check that every layer is loaded correctly in <code class="highlighter-rouge">flax</code> and forward pass is done correctly.</p>
 
-<p>The trick to work <code class="highlighter-rouge">flax</code> is to use scope to bound flax module. Basically, flax module works in two modes: bound and unbound. In bound mode, it keeps a reference to a scope so it has access to its parameters, and we can examine them. In unbound mode, it’s no difference than function, parameters are fed from the external, the module stores nothing.</p>
+<p>The trick is to use <a href="https://flax.readthedocs.io/en/stable/notebooks/flax_guided_tour.html#State">scope</a> to bind flax module. Basically, flax module works in two modes: bound and unbound. In bound mode, it keeps a reference to a scope so it has access to its parameters, and we can examine them. In unbound mode, module is no different than function, parameters are fed as arguments to the <code class="highlighter-rouge">__call__</code> function, the module stores nothing.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">flax.core.scope</span> <span class="kn">import</span> <span class="n">Scope</span>
 <span class="kn">from</span> <span class="nn">jax</span> <span class="kn">import</span> <span class="n">random</span>
@@ -227,11 +227,10 @@ window.onload = wrap_img;
 </span><span class="n">jnp</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">x_embed</span><span class="p">,</span> <span class="n">x_embed_pt</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
 </code></pre></div></div>
 
-<p>If something went wrong in this step, you will need to make changes to the above <code class="highlighter-rouge">convert_to_pytorch</code>.</p>
+<p>If something goes wrong in this step, you will need to make changes to the above <code class="highlighter-rouge">convert_to_pytorch</code>.</p>
 
 <h2 id="prefer-setup-instead-of-nncompact">
-<a class="anchor" href="#prefer-setup-instead-of-nncompact" aria-hidden="true"><span class="octicon octicon-link"></span></a>Prefer <code class="highlighter-rouge">setup</code> instead of <code class="highlighter-rouge">nn.compact</code>
-</h2>
+<a class="anchor" href="#prefer-setup-instead-of-nncompact" aria-hidden="true"><span class="octicon octicon-link"></span></a>Prefer setup() instead of nn.compact</h2>
 
 <p>One tip that helps me to debug sub-modules is to use <code class="highlighter-rouge">setup</code> instead of <code class="highlighter-rouge">nn.compact</code>.</p>
 
@@ -259,9 +258,9 @@ window.onload = wrap_img;
 
 <ul>
   <li>
-<code class="highlighter-rouge">flax</code> uses kernel instead of weight for parameter</li>
+<code class="highlighter-rouge">flax</code> uses kernel instead of weight for parameter: make sure to rename accordingly</li>
   <li>sometimes, you have to transpose the weight</li>
-  <li>sometimes, you have to add missing sub-module</li>
+  <li>sometimes, you have to add missing sub-module, such as</li>
 </ul>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">FlaxElectraGeneratorPredictions</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
@@ -285,7 +284,7 @@ window.onload = wrap_img;
 <h2 id="conclusion">
 <a class="anchor" href="#conclusion" aria-hidden="true"><span class="octicon octicon-link"></span></a>Conclusion</h2>
 
-<p>The process of porting a model to pytorch is time-consuming. I hope this post can alleviate some pains in the process. I decided to give <code class="highlighter-rouge">flax</code> a serious try. I may post something about <code class="highlighter-rouge">flax</code> or <code class="highlighter-rouge">jax</code> in the future.</p>
+<p>The process of porting a model to <code class="highlighter-rouge">flax</code> is time-consuming. I hope this post can alleviate some pains in the process. I decided to give <code class="highlighter-rouge">flax</code> a serious try. I may post something about <code class="highlighter-rouge">flax</code> or <code class="highlighter-rouge">jax</code> in the future.</p>
 
 <p>I appreciate any of your feedbacks or questions, feel free to reach out.</p>
 
